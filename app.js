@@ -56,6 +56,6 @@ app.use('/api/films', scrapingRoute)
   app.use(express.static(path.join(__dirname, './public')))
 
   // handle VueJS
-  app.get('*', (req, res) => res.sendFile('/public/index.html'));
+  app.get('*', (req, res) => res.sendFile(path.join(__dirname, './public/index.html')));
 
 module.exports = app;
