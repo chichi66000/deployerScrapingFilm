@@ -40,9 +40,10 @@ exports.scrapingfilm = async (req, res) => {
         }
         return movies
     })
+
     res.send({movies}) 
 
-    // console.log(movies);
+    console.log(movies);
     await browser.close()
 
 }

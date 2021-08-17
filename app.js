@@ -23,13 +23,17 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Credentials', true)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader(
+      'Content-Security-Policy',
+      "default-src 'self'; font-src 'self'; img-src 'self' https://m.media-amazon.com; script-src 'self'; style-src 'self'; frame-src 'self'"
+    );
     next();
 })
 
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json());
+app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -39,20 +43,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(limiter);
 app.use (expressSanitizer());
-
+app.use(cors())
 // imports les routes 
 const scrapingRoute = require('./routes/scrapingfilm')
 
 app.use('/api/films', scrapingRoute)
 
 // handle for production
-if (process.env.NODE_ENV === "production") {
+
   // static folder
-  // app.use(express.static(__dirname + '/public/'))
+  
   app.use(express.static(path.join(__dirname, './public')))
 
   // handle VueJS
-  app.get('*', (req, res) => res.sendFile(path.resolve(__dirname + '/public/index.html')));
-}
+  app.get('*', (req, res) => res.sendFile('./public/index.html'));
 
 module.exports = app;
